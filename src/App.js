@@ -27,8 +27,6 @@ const App = () => {
     !error && getCountries();
   }, [error]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
   return (
     <div>
       <ul>
@@ -41,9 +39,17 @@ const App = () => {
       </ul>
       <Switch>
         <Route exact path='/'>
-          {countries.map(country => (
-            <div key={country.id}>{country.name}</div>
-          ))}
+          {error ? (
+            <div>{error}</div>
+          ) : !loading ? (
+            <div>
+              {countries.map(country => (
+                <div key={country.id}>{country.name}</div>
+              ))}
+            </div>
+          ) : (
+            <div>Loading...</div>
+          )}
         </Route>
         <Route exact path='/about'>
           <h1>About us</h1>
