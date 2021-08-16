@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Switch, Route, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const App = () => {
@@ -30,9 +31,24 @@ const App = () => {
   if (error) return <div>{error}</div>;
   return (
     <div>
-      {countries.map(country => (
-        <div key={country.id}>{country.name}</div>
-      ))}
+      <ul>
+        <li>
+          <Link to='/'>Home</Link>
+        </li>
+        <li>
+          <Link to='/about'>About</Link>
+        </li>
+      </ul>
+      <Switch>
+        <Route exact path='/'>
+          {countries.map(country => (
+            <div key={country.id}>{country.name}</div>
+          ))}
+        </Route>
+        <Route exact path='/about'>
+          <h1>About us</h1>
+        </Route>
+      </Switch>
     </div>
   );
 };
