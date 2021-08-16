@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const getCountries = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(`${process.env.REACT_APP_API}/api/countries`);
+        setCountries(data);
+        setLoading(false);
+      } catch (error) {
+        if (error.response) {
+          setError(error.response.data.error);
+        } else {
+          setError(error.message);
+        }
+        setTimeout(() => setError(null), 3000);
+        setLoading(false);
+      }
+    };
+    !error && getCountries();
+  }, [error]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {countries.map(country => (
+        <div key={country.id}>{country.name}</div>
+      ))}
     </div>
   );
-}
+};
 
 export default App;
